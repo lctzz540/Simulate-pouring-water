@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bottle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <script src="sketch.js"></script>
+    <script src="Cup.js"></script>
+  </head>
+  <body>
+    <body>
+      <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <div class="columns" id="menu">
+          <div class="column is-one-thirds">
+            <div class="box">
+              <h1 class="title is-4">Vận hành hệ thống</h1>
+              <div class="mode-button">
+                <button class="button is-primary is-outlined" onClick="auto()">
+                  AUTO
+                </button>
+                <button
+                  class="button is-primary is-outlined"
+                  onClick="manual()"
+                >
+                  MANUAL
+                </button>
+              </div>
+              <div class="control-button">
+                <button
+                  class="button is-primary is-rounded"
+                  onClick="handleEmergency()"
+                >
+                  EMERGENCY
+                </button>
+                <button
+                  class="button is-primary is-rounded"
+                  onClick="handleReset()"
+                >
+                  RESET
+                </button>
+              </div>
+            </div>
+            <div class="box">
+              <h1 class="title is-4">Cài đặt thông số</h1>
+              <div class="detail">
+                <form id="form">
+                  <input
+                    class="input is-primary"
+                    type="number"
+                    placeholder="Số chai cần đóng nắp"
+                    id="needForm"
+                    min="0"
+                    disabled
+                  />
+                </form>
+                <p id="log"></p>
+              </div>
+            </div>
+            <div class="box">
+              <h1 class="title is-4">Hiển thị thông số</h1>
+              <div class="detail">
+                <h2 class="subtitle is-6">Số chai đã đóng nắp:</h2>
+                <div class="control" , id="countBottle"></div>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-6">Số lượng thùng đã hoàn thành:</h2>
+                <div class="control" , id="countBox"></div>
+              </div>
+            </div>
+            <div class="box">
+              <h1 class="title is-4">Vận hành chế độ AUTO</h1>
+              <div class="control-button">
+                <button
+                  class="button is-primary is-rounded"
+                  id="start"
+                  onClick="autoStart()"
+                  disabled
+                >
+                  START
+                </button>
+                <button
+                  class="button is-primary is-rounded"
+                  id="stop"
+                  onclick="autoStop()"
+                  disabled
+                >
+                  STOP
+                </button>
+              </div>
+            </div>
+            <div class="box">
+              <h1 class="title is-4">Trạng thái hoạt động</h1>
+              <div id="activelight">
+                <div class="light" id="runlight">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="currentColor"
+                    class="bi bi-lightbulb"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"
+                    />
+                  </svg>
+                  <h2 class="labellight">RUN</h2>
+                </div>
+                <div class="light" id="errorlight">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="currentColor"
+                    class="bi bi-lightbulb"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"
+                    />
+                  </svg>
+                  <h2 class="labellight">ERROR</h2>
+                </div>
+                <div class="light" id="stoplight">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="currentColor"
+                    class="bi bi-lightbulb"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"
+                    />
+                  </svg>
+                  <h2 class="labellight">STOP</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-two-thirds">
+            <div class="box" id="check">
+              <h1 class="title is-4">Vận hành chế độ MANUAL</h1>
+              <div class="detail">
+                <h2 class="subtitle is-4">Bơm</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="checkPump"
+                    onClick="handleCheckPump()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Van xả</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="checkValve"
+                    onClick="handleCheckValve()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Động cơ BT</h2>
+                <label class="switch" style="margin: right">
+                  <input
+                    type="checkbox"
+                    id="checkConvayor"
+                    onClick="handleCheckConvayor()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Xy lanh đóng</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="checkXL1"
+                    onClick="handleCheckXL1()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Xy lanh đẩy</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="checkXL2"
+                    onClick="handleCheckXL2()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Cảm biến 1</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="check1"
+                    onClick="handleCheck1()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Cảm biến 2</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="check2"
+                    onClick="handleCheck2()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="detail">
+                <h2 class="subtitle is-4">Cảm biến 3</h2>
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    id="check3"
+                    onClick="handleCheck3()"
+                    value="1"
+                    checked
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="main">
+        <button class="openbtn" onclick="openNav()">☰ Điều khiển</button>
+        <h2 class="title is-1" style="text-align: center; margin-top: 10px">
+          ĐỀ TÀI 23: ĐIỀU KHIỂN VÀ GIÁM SÁT TRÊN WEBSERVER CHO HỆ THỐNG CHIẾT
+          RÓT ĐÓNG NẮP DÙNG PLC S7-1200
+        </h2>
+        <div id="simulator"></div>
+      </div>
+
+      <script>
+        function openNav() {
+          document.getElementById("mySidebar").style.width = "65%";
+        }
+
+        function closeNav() {
+          document.getElementById("mySidebar").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+        }
+      </script>
+    </body>
+  </body>
+</html>
